@@ -19,10 +19,37 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Lesson_1" />
       <recent name="$PROJECT_DIR$/Lesson_1_TN" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration name="weight" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+      <module name="thinknetica" />
+      <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="" />
+      <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/Lesson_1" />
+      <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
+      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" track_test_folders="true" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/Lesson_1/weight.rb" />
+      <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Ruby.weight" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpringUtil" SPRING_PRE_LOADER_OPTION="true" RAKE_SPRING_PRE_LOADER_OPTION="true" RAILS_SPRING_PRE_LOADER_OPTION="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="1734fd2d-bfba-46bb-879b-65cdba5ed875" name="Default Changelist" comment="" />
@@ -30,11 +57,32 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1603482578761</updated>
-      <workItem from="1603482580447" duration="1690000" />
+      <workItem from="1603482580447" duration="2813000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1874" height="287" key="GridCell.Tab.0.bottom" timestamp="1603486135182">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="287" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603486135182" />
+    <state width="1874" height="287" key="GridCell.Tab.0.center" timestamp="1603486135182">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="287" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603486135182" />
+    <state width="1874" height="287" key="GridCell.Tab.0.left" timestamp="1603486135182">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="287" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603486135182" />
+    <state width="1874" height="287" key="GridCell.Tab.0.right" timestamp="1603486135182">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="287" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603486135182" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/thinknetica@weight.rcov" NAME="weight Coverage Results" MODIFIED="1603486135170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Lesson_1" MODULE_NAME="thinknetica" />
   </component>
 </project>
