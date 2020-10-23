@@ -1,1 +1,1 @@
-# Lessons_1_TN
+# Lessons ThinkNetica
