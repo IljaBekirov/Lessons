@@ -35,7 +35,7 @@ months = {
 
 
 if month.to_i > 12
-  puts "Ошибка. Количество месяце в году 12, а не #{month}"
+  puts "Ошибка. Количество месяцев в году 12, а не #{month}"
 elsif months[month.to_s] < day
   puts "Ошибка. В этом месяце #{months[month.to_s]} дня(ей), а не #{day}"
 else
