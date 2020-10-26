@@ -13,7 +13,7 @@ feb = if (year % 400).zero?
         28
       elsif (year % 4).zero?
         29
-      else 
+      else
         28
       end
 
@@ -31,8 +31,6 @@ months = {
   '11' => 30,
   '12' => 31
 }
-
-
 
 if month.to_i > 12
   puts "Ошибка. Количество месяцев в году 12, а не #{month}"
