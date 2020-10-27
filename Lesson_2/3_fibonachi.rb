@@ -1,12 +1,9 @@
 index = 0
-arr = []
+arr = [0, 1]
 while index < 100
-  if arr.size < 2
-    index += 1
-  else
-    index = arr.last(2).sum
-    break if index > 100
-  end
+  index = arr.last(2).sum
+  break if index > 100
+
   arr << index
 end
 
