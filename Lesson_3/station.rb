@@ -7,11 +7,9 @@ class Station
     @trains = []
   end
 
-  def all_trains(type = nil)
-    return trains if type.nil?
+  private
 
-    trains.select { |train| train if train.type == type }
-  end
+  # Эти методы в привате, т.к. они не вызываются напрямую из главного приложения, а только через связующий метод
 
   def train_arrival(train)
     trains << train

@@ -12,8 +12,4 @@ class Route
   def del_intermediate_station(station)
     @stations.delete(station)
   end
-
-  def show_stations
-    @stations.map { |station| puts station }
-  end
 end
