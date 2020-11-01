@@ -62,7 +62,7 @@ def create_or_edit_route
 
   if n == 1
     create_route
-  else
+  elsif n == 2
     edit_routes
   end
 end
@@ -71,6 +71,7 @@ def edit_routes
   show_all_routes
   puts 'Выберите из списка маршрут для редактирования'
   i = gets.chomp.to_i
+  route = @routes[i - 1]
 
   puts '1) Добавить станцию в маршрут'
   puts '2) Удалить станцию из маршрута'
@@ -79,18 +80,17 @@ def edit_routes
     show_all_stations
     puts 'Выберите станцию которую хотите добавить в маршрут'
     st = gets.chomp.to_i
-    @routes[i - 1].add_intermediate_station(@stations[st - 1])
-    show_all_routes
+    route.add_intermediate_station(@stations[st - 1])
   elsif n == 2
-    stations = @routes[i - 1].stations.map.with_index do |station, ind|
+    stations = route.stations.map.with_index do |station, ind|
                "#{ind + 1}) станция: #{station.name}"
              end
     puts stations
     puts 'Выберите станцию которую хотите удалить из маршрут'
     st = gets.chomp.to_i
-    @routes[i - 1].del_intermediate_station(@routes[i - 1].stations[st - 1])
-    show_all_routes
+    route.del_intermediate_station(route.stations[st - 1])
   end
+  show_all_routes
 end
 
 def create_route
@@ -131,30 +131,33 @@ end
 def create_or_edit_wagon
   puts 'Выберите поезд вагонами которого хотите управлять'
   show_all_trains
-  train = gets.chomp.to_i
+  train_index = gets.chomp.to_i
+  train = @trains[train_index - 1]
+
   puts '1) Прицепить вагон'
   puts '2) Отцепить вагон'
   action = gets.chomp.to_i
   if action == 1
-    wagon = (@trains[train - 1].type == 'Cargo' ? CargoWagon.new : PassengerWagon.new)
-    @trains[train - 1].add_wagons(wagon)
+    wagon = (train.type == 'Cargo' ? CargoWagon.new : PassengerWagon.new)
+    train.add_wagons(wagon)
   elsif action == 2
-    @trains[train - 1].del_wagons
+    train.del_wagons
   end
 end
 
 def move_train
   puts 'Выберите поезд который хотите перемещать'
   show_all_trains
-  train = gets.chomp.to_i
+  train_index = gets.chomp.to_i
+  train = @trains[train_index - 1]
 
   puts '1) Переместить поезд вперёд по маршруту'
   puts '2) Переместить поезд назад по маршруту'
   action = gets.chomp.to_i
   if action == 1
-    @trains[train - 1].go_forvard
+    train.go_forvard
   elsif action == 2
-    @trains[train - 1].go_back
+    train.go_back
   end
 
   show_all_trains
