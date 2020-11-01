@@ -83,8 +83,8 @@ def edit_routes
     route.add_intermediate_station(@stations[st - 1])
   elsif n == 2
     stations = route.stations.map.with_index do |station, ind|
-               "#{ind + 1}) станция: #{station.name}"
-             end
+      "#{ind + 1}) станция: #{station.name}"
+    end
     puts stations
     puts 'Выберите станцию которую хотите удалить из маршрут'
     st = gets.chomp.to_i
@@ -116,8 +116,7 @@ end
 
 def show_all_routes
   all_routes = @routes.map.with_index do |route, i|
-
-    "#{i + 1}) станции маршрута: #{route.stations.map { |st| st.name }}"
+    "#{i + 1}) станции маршрута: #{route.stations.map(&:name)}"
   end
   puts '=====================Список всех маршрутов==================|'
   puts all_routes
