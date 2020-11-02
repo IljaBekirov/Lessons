@@ -1,4 +1,17 @@
+require './company_name'
+require './instance_counter'
+
 class Train
+  include CompanyName
+  include InstanceCounter
+  # extend InstanceCounter::ClassMethods
+
+  @@trains = []
+
+  def self.find(train_number)
+    @@trains.find { |train| train.number == train_number }
+  end
+
   attr_accessor :speed, :route, :station, :wagons
   attr_reader :number
 
@@ -6,6 +19,8 @@ class Train
     @number = number
     @speed = 0
     @wagons = []
+    @@trains << self
+    # register_instance
   end
 
   def add_routes(route)

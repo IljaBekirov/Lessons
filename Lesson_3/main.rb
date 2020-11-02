@@ -6,20 +6,20 @@ require './passenger_train'
 require './wagon'
 require './cargo_wagon'
 require './passenger_wagon'
+require './company_name'
 
-@stations = []
 @trains = []
 @routes = []
 
 def create_station
   print 'Введите название станции: '
   station = gets.chomp.to_s
-  @stations << Station.new(station)
+  Station.new(station)
   show_all_stations
 end
 
 def show_all_stations
-  all_stations = @stations.map.with_index do |st, i|
+  all_stations = Station.stations.map.with_index do |st, i|
     "#{i + 1}) станция: #{st.name}, поездов: #{st.trains.count}"
   end
   puts '=====================Список всех станций====================|'
@@ -80,7 +80,7 @@ def edit_routes
     show_all_stations
     puts 'Выберите станцию которую хотите добавить в маршрут'
     st = gets.chomp.to_i
-    route.add_intermediate_station(@stations[st - 1])
+    route.add_intermediate_station(Station.stations[st - 1])
   elsif n == 2
     stations = route.stations.map.with_index do |station, ind|
       "#{ind + 1}) станция: #{station.name}"
@@ -95,7 +95,7 @@ end
 
 def create_route
   show_all_stations
-  if @stations.count < 2
+  if Station.stations.count < 2
     puts '============================================================|'
     puts 'Ошибка! Нет возможности создать маршрут из одной станции!'
     puts '============================================================|'
@@ -104,11 +104,11 @@ def create_route
 
   puts 'Выберите начальную станцию маршрута'
   i = gets.chomp.to_i
-  start_station = @stations[i - 1]
+  start_station = Station.stations[i - 1]
 
   puts 'Выберите конечную станцию маршрута'
   n = gets.chomp.to_i
-  end_station = @stations[n - 1]
+  end_station = Station.stations[n - 1]
 
   @routes << Route.new(start_station, end_station)
   show_all_routes
