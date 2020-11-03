@@ -78,7 +78,7 @@ def edit_routes
   n = gets.chomp.to_i
   if n == 1
     show_all_stations
-    puts 'Выберите станцию которую хотите добавить в маршрут'
+    puts 'Выберите станцию, которую хотите добавить в маршрут'
     st = gets.chomp.to_i
     route.add_intermediate_station(Station.stations[st - 1])
   elsif n == 2

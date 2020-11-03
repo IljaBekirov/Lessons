@@ -9,7 +9,7 @@ module InstanceCounter
 
     # private
 
-    def sum_instances
+    def plus_instance
       @instances ||= 0
       @instances += 1
     end
@@ -19,7 +19,7 @@ module InstanceCounter
     # private
 
     def register_instance
-      self.class.sum_instances
+      self.class.plus_instance
     end
   end
 end

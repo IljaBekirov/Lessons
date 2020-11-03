@@ -6,10 +6,10 @@ class Train
   include InstanceCounter
   # extend InstanceCounter::ClassMethods
 
-  @@trains = []
+  @@trains = {}
 
   def self.find(train_number)
-    @@trains.find { |train| train.number == train_number }
+    @@trains[train_number]
   end
 
   attr_accessor :speed, :route, :station, :wagons
@@ -19,7 +19,7 @@ class Train
     @number = number
     @speed = 0
     @wagons = []
-    @@trains << self
+    @@trains.merge!(number.to_s => self)
     # register_instance
   end
 
