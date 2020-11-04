@@ -7,8 +7,16 @@ class Route
 
   attr_accessor :stations
 
+  @@routes = []
+
+  def self.all
+    @@routes
+  end
+
   def initialize(start_station, end_station)
     @stations = [start_station, end_station]
+    validate!
+    @@routes << self
     register_instance
   end
 
@@ -18,5 +26,18 @@ class Route
 
   def del_intermediate_station(station)
     @stations.delete(station)
+  end
+
+  private
+
+  def validate?
+    validate!
+    true
+  rescue
+    false
+  end
+
+  def validate!
+    raise 'Количество станций в маршруте не может быть меньше, чем 2' if stations.count < 2
   end
 end

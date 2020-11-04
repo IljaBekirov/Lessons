@@ -8,18 +8,25 @@ require './cargo_wagon'
 require './passenger_wagon'
 require './company_name'
 
-@trains = []
-@routes = []
+def find_train(index)
+  train_keys = Train.all.keys
+  Train.all[train_keys[index - 1]]
+end
 
 def create_station
   print 'Введите название станции: '
   station = gets.chomp.to_s
   Station.new(station)
   show_all_stations
+rescue RuntimeError => e
+  puts '=================Ошибка при создании станции================|'
+  puts e.message
+  puts '============================================================|'
+  retry
 end
 
 def show_all_stations
-  all_stations = Station.stations.map.with_index do |st, i|
+  all_stations = Station.all.map.with_index do |st, i|
     "#{i + 1}) станция: #{st.name}, поездов: #{st.trains.count}"
   end
   puts '=====================Список всех станций====================|'
@@ -33,21 +40,20 @@ def create_train
 
   print 'Введите номер поезда: '
   train_number = gets.chomp.to_s
-  if train_number.empty? || train_type.nil?
-    puts '============================================================|'
-    puts '----------------Введите тип и номер поезда------------------|'
-    puts '============================================================|'
-    return
-  end
-  @trains << (train_type == 1 ? PassengerTrain.new(train_number) : CargoTrain.new(train_number))
-
+  train_type == 1 ? PassengerTrain.new(train_number) : CargoTrain.new(train_number)
   show_all_trains
+rescue RuntimeError => e
+  puts '=================Ошибка при создании поезда=================|'
+  puts e.message
+  puts '============================================================|'
+  retry
 end
 
 def show_all_trains
-  all_trains = @trains.map.with_index do |tr, i|
-    name = tr.station.nil? ? '' : "станция: #{tr.station.name},"
-    "#{i + 1}) номер: #{tr.number}, #{name} вагонов: #{tr.wagons.count}, тип: #{tr.type}"
+  all_trains = Train.all.map.with_index do |tr, i|
+    train = tr.last
+    name = train.station.nil? ? '' : "станция: #{train.station.name},"
+    "#{i + 1}) номер: #{train.number}, #{name} вагонов: #{train.wagons.count}, тип: #{train.type}"
   end
   puts '=====================Список всех поездов====================|'
   puts all_trains
@@ -71,7 +77,7 @@ def edit_routes
   show_all_routes
   puts 'Выберите из списка маршрут для редактирования'
   i = gets.chomp.to_i
-  route = @routes[i - 1]
+  route = Route.all[i - 1]
 
   puts '1) Добавить станцию в маршрут'
   puts '2) Удалить станцию из маршрута'
@@ -80,7 +86,7 @@ def edit_routes
     show_all_stations
     puts 'Выберите станцию, которую хотите добавить в маршрут'
     st = gets.chomp.to_i
-    route.add_intermediate_station(Station.stations[st - 1])
+    route.add_intermediate_station(Station.all[st - 1])
   elsif n == 2
     stations = route.stations.map.with_index do |station, ind|
       "#{ind + 1}) станция: #{station.name}"
@@ -95,7 +101,7 @@ end
 
 def create_route
   show_all_stations
-  if Station.stations.count < 2
+  if Station.all.count < 2
     puts '============================================================|'
     puts 'Ошибка! Нет возможности создать маршрут из одной станции!'
     puts '============================================================|'
@@ -104,18 +110,18 @@ def create_route
 
   puts 'Выберите начальную станцию маршрута'
   i = gets.chomp.to_i
-  start_station = Station.stations[i - 1]
+  start_station = Station.all[i - 1]
 
   puts 'Выберите конечную станцию маршрута'
   n = gets.chomp.to_i
-  end_station = Station.stations[n - 1]
+  end_station = Station.all[n - 1]
 
-  @routes << Route.new(start_station, end_station)
+  Route.new(start_station, end_station)
   show_all_routes
 end
 
 def show_all_routes
-  all_routes = @routes.map.with_index do |route, i|
+  all_routes = Route.all.map.with_index do |route, i|
     "#{i + 1}) станции маршрута: #{route.stations.map(&:name)}"
   end
   puts '=====================Список всех маршрутов==================|'
@@ -130,7 +136,7 @@ def add_route_to_train
   puts 'Выберите маршрут, который хотите добавить данному поезду'
   show_all_routes
   route = gets.chomp.to_i
-  @trains[train - 1].add_routes(@routes[route - 1])
+  find_train(train).add_routes(Route.all[route - 1])
   show_all_trains
 end
 
@@ -138,7 +144,8 @@ def create_or_edit_wagon
   puts 'Выберите поезд вагонами которого хотите управлять'
   show_all_trains
   train_index = gets.chomp.to_i
-  train = @trains[train_index - 1]
+
+  train = find_train(train_index)
 
   puts '1) Прицепить вагон'
   puts '2) Отцепить вагон'
@@ -149,13 +156,16 @@ def create_or_edit_wagon
   elsif action == 2
     train.del_wagons
   end
+rescue StandardError => e
+  puts e
 end
 
 def move_train
   puts 'Выберите поезд который хотите перемещать'
   show_all_trains
   train_index = gets.chomp.to_i
-  train = @trains[train_index - 1]
+
+  train = find_train(train_index)
 
   puts '1) Переместить поезд вперёд по маршруту'
   puts '2) Переместить поезд назад по маршруту'
@@ -167,6 +177,11 @@ def move_train
   end
 
   show_all_trains
+rescue RuntimeError => e
+  puts '===============Ошибка при перемещении поезда================|'
+  puts e.message
+  puts '============================================================|'
+  retry
 end
 
 loop do
@@ -198,3 +213,5 @@ loop do
     puts 'Выберите номер из списка'
   end
 end
+
+# Train.new('121')

@@ -5,6 +5,8 @@ class Station
   include InstanceCounter
   # extend InstanceCounter::ClassMethods
 
+  STATION = /[a-zа-я]{2,}|\d/i.freeze
+
   attr_accessor :trains
   attr_reader :name
 
@@ -17,6 +19,7 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
+    validate!
     @@stations << self
     register_instance
   end
@@ -29,5 +32,16 @@ class Station
     trains.delete(train)
   end
 
+  private
 
+  def validate?
+    validate!
+    true
+  rescue
+    false
+  end
+
+  def validate!
+    raise 'Станция не соответствует требованиям' if name !~ STATION
+  end
 end

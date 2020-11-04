@@ -6,10 +6,16 @@ class Train
   include InstanceCounter
   # extend InstanceCounter::ClassMethods
 
+  TRAIN_NUMBER = /\w{3}-\w{2}|\w{5}/i.freeze
+
   @@trains = {}
 
   def self.find(train_number)
     @@trains[train_number]
+  end
+
+  def self.all
+    @@trains
   end
 
   attr_accessor :speed, :route, :station, :wagons
@@ -20,7 +26,28 @@ class Train
     @speed = 0
     @wagons = []
     @@trains.merge!(number.to_s => self)
+    validate!
     # register_instance
+  end
+
+  def add_wagons(wagon)
+    raise 'Данному типу поезда не подходит этот тип вагона' unless wagon.class.to_s.include?(type)
+
+    if speed.zero?
+      @wagons << wagon
+      puts "В состав добавили вагон, итого #{@wagons.count} вагон(ов)"
+    else
+      raise "Поезд движется со скоростью #{speed}. Прицеплять вагоны разрешено только к стоящему поезду"
+    end
+  end
+
+  def del_wagons
+    raise "Поезд движется со скоростью #{speed}. Отцеплять вагон разрешено только от стоящего поезда" unless speed.zero?
+
+    raise 'В составе нет ни одного вагона' if @wagons.count.zero?
+
+    @wagons.delete_at(-1)
+    puts "Из состава убрали вагон, итого #{@wagons.count} вагонов"
   end
 
   def add_routes(route)
@@ -31,7 +58,7 @@ class Train
   end
 
   def go_forvard
-    return if next_station.nil?
+    return next_station if next_station.nil?
 
     @station.train_departure(self)
     @station = @route.stations[@index_station += 1]
@@ -39,7 +66,7 @@ class Train
   end
 
   def go_back
-    return if previous_station.nil?
+    return previous_station if previous_station.nil?
 
     @station.train_departure(self)
     @station = @route.stations[@index_station -= 1]
@@ -50,7 +77,7 @@ class Train
 
   def previous_station
     if (@index_station - 1).negative?
-      puts 'Это первая станция в маршруте, предыдущей станции нет'
+      raise 'Это первая станция в маршруте, предыдущей станции нет'
     else
       true
     end
@@ -58,9 +85,20 @@ class Train
 
   def next_station
     if @route.stations.size - 1 < @index_station + 1
-      puts 'Это конечная станция в маршруте'
+      raise 'Это конечная станция в маршруте'
     else
       true
     end
+  end
+
+  def validate?
+    validate!
+    true
+  rescue
+    false
+  end
+
+  def validate!
+    raise 'Номер поезда не соответствует формату' if number !~ TRAIN_NUMBER
   end
 end
