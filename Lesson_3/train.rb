@@ -31,18 +31,22 @@ class Train
   end
 
   def add_wagons(wagon)
-    raise 'Данному типу поезда не подходит этот тип вагона' unless wagon.class.to_s.include?(type)
+    unless wagon.class.to_s.include?(type)
+      raise 'Данному типу поезда не подходит этот тип вагона'
+    end
 
-    if speed.zero?
-      @wagons << wagon
-      puts "В состав добавили вагон, итого #{@wagons.count} вагон(ов)"
-    else
+    unless speed.zero?
       raise "Поезд движется со скоростью #{speed}. Прицеплять вагоны разрешено только к стоящему поезду"
     end
+
+    @wagons << wagon
+    puts "В состав добавили вагон, итого #{@wagons.count} вагон(ов)"
   end
 
   def del_wagons
-    raise "Поезд движется со скоростью #{speed}. Отцеплять вагон разрешено только от стоящего поезда" unless speed.zero?
+    unless speed.zero?
+      raise "Поезд движется со скоростью #{speed}. Отцеплять вагон разрешено только от стоящего поезда"
+    end
 
     raise 'В составе нет ни одного вагона' if @wagons.count.zero?
 
@@ -78,17 +82,17 @@ class Train
   def previous_station
     if (@index_station - 1).negative?
       raise 'Это первая станция в маршруте, предыдущей станции нет'
-    else
-      true
     end
+
+    true
   end
 
   def next_station
     if @route.stations.size - 1 < @index_station + 1
       raise 'Это конечная станция в маршруте'
-    else
-      true
     end
+
+    true
   end
 
   def validate?
