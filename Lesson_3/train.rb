@@ -4,6 +4,7 @@ require './instance_counter'
 class Train
   include CompanyName
   include InstanceCounter
+  include Validate
   # extend InstanceCounter::ClassMethods
 
   TRAIN_NUMBER = /\w{3}-\w{2}|\w{5}/i.freeze
@@ -25,8 +26,8 @@ class Train
     @number = number
     @speed = 0
     @wagons = []
-    @@trains.merge!(number.to_s => self)
     validate!
+    @@trains.merge!(number.to_s => self)
     # register_instance
   end
 
@@ -93,13 +94,6 @@ class Train
     end
 
     true
-  end
-
-  def validate?
-    validate!
-    true
-  rescue
-    false
   end
 
   def validate!

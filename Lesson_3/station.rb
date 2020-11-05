@@ -3,6 +3,7 @@ require './instance_counter'
 
 class Station
   include InstanceCounter
+  include Validate
   # extend InstanceCounter::ClassMethods
 
   STATION = /[a-zа-я]{2,}|\d/i.freeze
@@ -33,13 +34,6 @@ class Station
   end
 
   private
-
-  def validate?
-    validate!
-    true
-  rescue
-    false
-  end
 
   def validate!
     raise 'Станция не соответствует требованиям' if name !~ STATION

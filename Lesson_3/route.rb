@@ -3,6 +3,7 @@ require './instance_counter'
 
 class Route
   include InstanceCounter
+  include Validate
   # extend InstanceCounter::ClassMethods
 
   attr_accessor :stations
@@ -29,13 +30,6 @@ class Route
   end
 
   private
-
-  def validate?
-    validate!
-    true
-  rescue
-    false
-  end
 
   def validate!
     raise 'Количество станций в маршруте не может быть меньше, чем 2' if stations.count < 2
