@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require './company_name'
 require './instance_counter'
+require './validate'
 
 class Station
   include InstanceCounter
@@ -31,6 +34,10 @@ class Station
 
   def train_departure(train)
     trains.delete(train)
+  end
+
+  def train_block(&block)
+    @trains.map { |train| block.call(train) }
   end
 
   private

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './train'
 require './station'
 require './route'
@@ -26,12 +28,47 @@ rescue RuntimeError => e
 end
 
 def show_all_stations
-  all_stations = Station.all.map.with_index(1) do |st, i|
-    "#{i}) станция: #{st.name}, поездов: #{st.trains.count}"
-  end
   puts '=====================Список всех станций====================|'
-  puts all_stations
+  Station.all.map.with_index(1) { |st, i| show_station(st, i) }
   puts '============================================================|'
+end
+
+def show_station(st, i)
+  puts "#{i}) станция: #{st.name}, поездов: #{st.trains.count}"
+end
+
+def create_or_edit_train
+  puts '1) Информация по поезду'
+  puts '2) Создать новый поезд'
+  variable = gets.chomp.to_i
+
+  if variable == 1
+    train_info
+  elsif variable == 2
+    create_train
+  end
+rescue RuntimeError => e
+  puts '=================Ошибка при создании поезда=================|'
+  puts e.message
+  puts '============================================================|'
+  retry
+end
+
+def train_info
+  show_all_trains
+  puts 'Выберите поезд для получения подробной информации'
+  index = gets.chomp.to_i
+  train = find_train(index)
+  puts '1) Маршрут'
+  puts '2) Вагоны'
+  info = gets.chomp.to_i
+
+  if info == 1
+    show_route(train.route)
+  elsif info == 2
+    puts show_all_wagons_of_train(train)
+  end
+  train
 end
 
 def create_train
@@ -42,22 +79,28 @@ def create_train
   train_number = gets.chomp.to_s
   train_type == 1 ? PassengerTrain.new(train_number) : CargoTrain.new(train_number)
   show_all_trains
-rescue RuntimeError => e
-  puts '=================Ошибка при создании поезда=================|'
-  puts e.message
-  puts '============================================================|'
-  retry
+end
+
+def show_all_wagons_of_train(train)
+  train.wagons.map.with_index(1) do |wag, i|
+    if train.type == 'Cargo'
+      "#{i}) Номер: #{wag.number} Общ объем: #{wag.volume} Занято: #{wag.occupied_volume} Свободно: #{wag.free_volume}"
+    else
+      "#{i}) Номер: #{wag.number} Кол-во мест: #{wag.seats} Занято: #{wag.occupied_seat} Свободно: #{wag.free_seats}"
+    end
+  end
 end
 
 def show_all_trains
-  all_trains = Train.all.map.with_index(1) do |tr, i|
-    train = tr.last
-    name = train.station.nil? ? '' : "станция: #{train.station.name},"
-    "#{i}) номер: #{train.number}, #{name} вагонов: #{train.wagons.count}, тип: #{train.type}"
-  end
   puts '=====================Список всех поездов====================|'
-  puts all_trains
+  Train.all.map.with_index(1) { |tr, i| show_train(tr, i) }
   puts '============================================================|'
+end
+
+def show_train(tr, index)
+  train = tr.last
+  name = train.station.nil? ? '' : "станция: #{train.station.name},"
+  puts "#{index}) номер: #{train.number}, #{name} вагонов: #{train.wagons.count}, тип: #{train.type}"
 end
 
 def create_or_edit_route
@@ -83,20 +126,25 @@ def edit_routes
   puts '2) Удалить станцию из маршрута'
   n = gets.chomp.to_i
   if n == 1
-    show_all_stations
-    puts 'Выберите станцию, которую хотите добавить в маршрут'
-    st = gets.chomp.to_i
-    route.add_intermediate_station(Station.all[st - 1])
+    add_station(route)
   elsif n == 2
-    stations = route.stations.map.with_index(1) do |station, ind|
-      "#{ind}) станция: #{station.name}"
-    end
-    puts stations
-    puts 'Выберите станцию которую хотите удалить из маршрут'
-    st = gets.chomp.to_i
-    route.del_intermediate_station(route.stations[st - 1])
+    del_station(route)
   end
   show_all_routes
+end
+
+def add_station(route)
+  show_all_stations
+  puts 'Выберите станцию, которую хотите добавить в маршрут'
+  st = gets.chomp.to_i
+  route.add_intermediate_station(Station.all[st - 1])
+end
+
+def del_station(route)
+  route.stations.map.with_index(1) { |station, ind| show_station(station, ind) }
+  puts 'Выберите станцию которую хотите удалить из маршрут'
+  st = gets.chomp.to_i
+  route.del_intermediate_station(route.stations[st - 1])
 end
 
 def create_route
@@ -121,18 +169,20 @@ def create_route
 end
 
 def show_all_routes
-  all_routes = Route.all.map.with_index(1) do |route, i|
-    "#{i}) станции маршрута: #{route.stations.map(&:name)}"
-  end
   puts '=====================Список всех маршрутов==================|'
-  puts all_routes
+  Route.all.map.with_index(1) { |route, i| show_route(route, i) }
   puts '============================================================|'
+end
+
+def show_route(route, i = 1)
+  puts "#{i}) станции маршрута: #{route.stations.map(&:name)}"
 end
 
 def add_route_to_train
   puts 'Выберите поезд которому хотите добавить маршрут'
   show_all_trains
   train = gets.chomp.to_i
+
   puts 'Выберите маршрут, который хотите добавить данному поезду'
   show_all_routes
   route = gets.chomp.to_i
@@ -151,13 +201,28 @@ def create_or_edit_wagon
   puts '2) Отцепить вагон'
   action = gets.chomp.to_i
   if action == 1
-    wagon = (train.type == 'Cargo' ? CargoWagon.new : PassengerWagon.new)
-    train.add_wagons(wagon)
+    add_wagon(train)
   elsif action == 2
     train.del_wagons
   end
 rescue StandardError => e
   puts e
+end
+
+def add_wagon(train)
+  wagon = if train.type == 'Cargo'
+            print 'Введите общий объем вагона: '
+            vol = gets.chomp.to_i
+            CargoWagon.new(vol)
+          else
+            print 'Введите номер вагона: '
+            number = gets.chomp.to_i
+
+            print 'Введите общее количество мест в вагоне: '
+            seats = gets.chomp.to_i
+            PassengerWagon.new(number, seats)
+          end
+  train.add_wagons(wagon)
 end
 
 def move_train
@@ -189,7 +254,7 @@ loop do
   puts '-----------Программа управления Железной дорогой------------|'
   puts '============================================================|'
   puts '1) Создание станции                                         |'
-  puts '2) Создание поезда                                          |'
+  puts '2) Создание и управление поездами                           |'
   puts '3) Создание и управление маршрутами                         |'
   puts '4) Назначение маршрута поезду                               |'
   puts '5) Упрвление вагонами                                       |'
@@ -203,7 +268,7 @@ loop do
   case command
   when 0 then break
   when 1 then create_station
-  when 2 then create_train
+  when 2 then create_or_edit_train
   when 3 then create_or_edit_route
   when 4 then add_route_to_train
   when 5 then create_or_edit_wagon
@@ -213,5 +278,3 @@ loop do
     puts 'Выберите номер из списка'
   end
 end
-
-# Train.new('121')

@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require './company_name'
 require './instance_counter'
+require './validate'
 
 class Route
   include InstanceCounter

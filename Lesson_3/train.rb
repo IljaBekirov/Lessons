@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require './company_name'
 require './instance_counter'
+require './validate'
 
 class Train
   include CompanyName
@@ -76,6 +79,10 @@ class Train
     @station.train_departure(self)
     @station = @route.stations[@index_station -= 1]
     @station.train_arrival(self)
+  end
+
+  def wagons_block(&block)
+    @wagons.map { |wagon| block.call(wagon) }
   end
 
   private
