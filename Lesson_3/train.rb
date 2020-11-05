@@ -62,7 +62,7 @@ class Train
   end
 
   def go_forvard
-    return next_station if next_station.nil?
+    return next_station unless next_station
 
     @station.train_departure(self)
     @station = @route.stations[@index_station += 1]
@@ -70,7 +70,7 @@ class Train
   end
 
   def go_back
-    return previous_station if previous_station.nil?
+    return previous_station unless previous_station
 
     @station.train_departure(self)
     @station = @route.stations[@index_station -= 1]

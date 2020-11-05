@@ -26,8 +26,8 @@ rescue RuntimeError => e
 end
 
 def show_all_stations
-  all_stations = Station.all.map.with_index do |st, i|
-    "#{i + 1}) станция: #{st.name}, поездов: #{st.trains.count}"
+  all_stations = Station.all.map.with_index(1) do |st, i|
+    "#{i}) станция: #{st.name}, поездов: #{st.trains.count}"
   end
   puts '=====================Список всех станций====================|'
   puts all_stations
@@ -50,10 +50,10 @@ rescue RuntimeError => e
 end
 
 def show_all_trains
-  all_trains = Train.all.map.with_index do |tr, i|
+  all_trains = Train.all.map.with_index(1) do |tr, i|
     train = tr.last
     name = train.station.nil? ? '' : "станция: #{train.station.name},"
-    "#{i + 1}) номер: #{train.number}, #{name} вагонов: #{train.wagons.count}, тип: #{train.type}"
+    "#{i}) номер: #{train.number}, #{name} вагонов: #{train.wagons.count}, тип: #{train.type}"
   end
   puts '=====================Список всех поездов====================|'
   puts all_trains
@@ -88,8 +88,8 @@ def edit_routes
     st = gets.chomp.to_i
     route.add_intermediate_station(Station.all[st - 1])
   elsif n == 2
-    stations = route.stations.map.with_index do |station, ind|
-      "#{ind + 1}) станция: #{station.name}"
+    stations = route.stations.map.with_index(1) do |station, ind|
+      "#{ind}) станция: #{station.name}"
     end
     puts stations
     puts 'Выберите станцию которую хотите удалить из маршрут'
@@ -121,8 +121,8 @@ def create_route
 end
 
 def show_all_routes
-  all_routes = Route.all.map.with_index do |route, i|
-    "#{i + 1}) станции маршрута: #{route.stations.map(&:name)}"
+  all_routes = Route.all.map.with_index(1) do |route, i|
+    "#{i}) станции маршрута: #{route.stations.map(&:name)}"
   end
   puts '=====================Список всех маршрутов==================|'
   puts all_routes
