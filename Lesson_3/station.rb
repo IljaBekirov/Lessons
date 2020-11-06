@@ -36,8 +36,8 @@ class Station
     trains.delete(train)
   end
 
-  def train_block(&block)
-    @trains.map { |train| block.call(train) }
+  def train_block
+    @trains.each { |train| yield train }
   end
 
   private

@@ -81,8 +81,8 @@ class Train
     @station.train_arrival(self)
   end
 
-  def wagons_block(&block)
-    @wagons.map { |wagon| block.call(wagon) }
+  def wagons_block
+    @wagons.each { |wagon| yield wagon }
   end
 
   private
