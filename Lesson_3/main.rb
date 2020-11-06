@@ -21,9 +21,7 @@ def create_station
   Station.new(station)
   show_all_stations
 rescue RuntimeError => e
-  puts '=================Ошибка при создании станции================|'
-  puts e.message
-  puts '============================================================|'
+  show_error(e)
   retry
 end
 
@@ -33,8 +31,8 @@ def show_all_stations
   puts '============================================================|'
 end
 
-def show_station(st, i)
-  puts "#{i}) станция: #{st.name}, поездов: #{st.trains.count}"
+def show_station(station, index)
+  puts "#{index}) станция: #{station.name}, поездов: #{station.trains.count}"
 end
 
 def create_or_edit_train
@@ -42,15 +40,14 @@ def create_or_edit_train
   puts '2) Создать новый поезд'
   variable = gets.chomp.to_i
 
-  if variable == 1
-    train_info
-  elsif variable == 2
-    create_train
+  case variable
+  when 1 then train_info
+  when 2 then create_train
+  else
+    select_variant
   end
 rescue RuntimeError => e
-  puts '=================Ошибка при создании поезда=================|'
-  puts e.message
-  puts '============================================================|'
+  show_error(e)
   retry
 end
 
@@ -63,10 +60,11 @@ def train_info
   puts '2) Вагоны'
   info = gets.chomp.to_i
 
-  if info == 1
-    show_route(train.route)
-  elsif info == 2
-    puts show_all_wagons_of_train(train)
+  case info
+  when 1 then show_route(train.route)
+  when 2 then puts show_all_wagons_of_train(train)
+  else
+    select_variant
   end
   train
 end
@@ -107,12 +105,13 @@ def create_or_edit_route
   show_all_routes
   puts '1) Создание нового маршрута'
   puts '2) Редактирование существующего маршрута'
-  n = gets.chomp.to_i
+  number = gets.chomp.to_i
 
-  if n == 1
-    create_route
-  elsif n == 2
-    edit_routes
+  case number
+  when 1 then create_route
+  when 2 then edit_routes
+  else
+    select_variant
   end
 end
 
@@ -124,12 +123,14 @@ def edit_routes
 
   puts '1) Добавить станцию в маршрут'
   puts '2) Удалить станцию из маршрута'
-  n = gets.chomp.to_i
-  if n == 1
-    add_station(route)
-  elsif n == 2
-    del_station(route)
+  number = gets.chomp.to_i
+  case number
+  when 1 then add_station(route)
+  when 2 then del_station(route)
+  else
+    select_variant
   end
+
   show_all_routes
 end
 
@@ -200,10 +201,11 @@ def create_or_edit_wagon
   puts '1) Прицепить вагон'
   puts '2) Отцепить вагон'
   action = gets.chomp.to_i
-  if action == 1
-    add_wagon(train)
-  elsif action == 2
-    train.del_wagons
+  case action
+  when 1 then add_wagon(train)
+  when 2 then train.del_wagons
+  else
+    select_variant
   end
 rescue StandardError => e
   puts e
@@ -235,18 +237,28 @@ def move_train
   puts '1) Переместить поезд вперёд по маршруту'
   puts '2) Переместить поезд назад по маршруту'
   action = gets.chomp.to_i
-  if action == 1
-    train.go_forvard
-  elsif action == 2
-    train.go_back
+
+  case action
+  when 1 then train.go_forvard
+  when 2 then train.go_back
+  else
+    select_variant
   end
 
   show_all_trains
 rescue RuntimeError => e
-  puts '===============Ошибка при перемещении поезда================|'
-  puts e.message
-  puts '============================================================|'
+  show_error(e)
   retry
+end
+
+def select_variant
+  puts 'Выберите один из вариантов'
+end
+
+def show_error(error)
+  puts '=======================Ошибка===============================|'
+  puts error.message
+  puts '============================================================|'
 end
 
 loop do
