@@ -91,12 +91,12 @@ end
 
 def show_all_trains
   puts '=====================Список всех поездов====================|'
-  Train.all.map.with_index(1) { |tr, i| show_train(tr, i) }
+  Train.all.map.with_index(1) { |train, index| show_train(train, index) }
   puts '============================================================|'
 end
 
-def show_train(tr, index)
-  train = tr.last
+def show_train(train, index)
+  train = train.last
   name = train.station.nil? ? '' : "станция: #{train.station.name},"
   puts "#{index}) номер: #{train.number}, #{name} вагонов: #{train.wagons.count}, тип: #{train.type}"
 end
@@ -116,10 +116,7 @@ def create_or_edit_route
 end
 
 def edit_routes
-  show_all_routes
-  puts 'Выберите из списка маршрут для редактирования'
-  i = gets.chomp.to_i
-  route = Route.all[i - 1]
+  route = select_route
 
   puts '1) Добавить станцию в маршрут'
   puts '2) Удалить станцию из маршрута'
@@ -132,6 +129,13 @@ def edit_routes
   end
 
   show_all_routes
+end
+
+def select_route
+  show_all_routes
+  puts 'Выберите из списка маршрут для редактирования'
+  i = gets.chomp.to_i
+  Route.all[i - 1]
 end
 
 def add_station(route)
@@ -150,12 +154,7 @@ end
 
 def create_route
   show_all_stations
-  if Station.all.count < 2
-    puts '============================================================|'
-    puts 'Ошибка! Нет возможности создать маршрут из одной станции!'
-    puts '============================================================|'
-    return
-  end
+  error_station_count
 
   puts 'Выберите начальную станцию маршрута'
   i = gets.chomp.to_i
@@ -169,14 +168,22 @@ def create_route
   show_all_routes
 end
 
-def show_all_routes
-  puts '=====================Список всех маршрутов==================|'
-  Route.all.map.with_index(1) { |route, i| show_route(route, i) }
+def error_station_count
+  return unless Station.all.count < 2
+
+  puts '============================================================|'
+  puts 'Ошибка! Нет возможности создать маршрут из одной станции!'
   puts '============================================================|'
 end
 
-def show_route(route, i = 1)
-  puts "#{i}) станции маршрута: #{route.stations.map(&:name)}"
+def show_all_routes
+  puts '=====================Список всех маршрутов==================|'
+  Route.all.map.with_index(1) { |route, index| show_route(route, index) }
+  puts '============================================================|'
+end
+
+def show_route(route, index = 1)
+  puts "#{index}) станции маршрута: #{route.stations.map(&:name)}"
 end
 
 def add_route_to_train

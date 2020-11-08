@@ -77,8 +77,8 @@ class Train
     @station.train_arrival(self)
   end
 
-  def wagons_block
-    @wagons.each { |wagon| yield wagon }
+  def wagons_block(&block)
+    @wagons.each(&block) if block_given?
   end
 
   private

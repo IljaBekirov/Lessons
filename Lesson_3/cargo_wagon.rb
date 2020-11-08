@@ -5,6 +5,7 @@ class CargoWagon < Wagon
   attr_reader :volume
 
   def initialize(volume)
+    super()
     @volume = volume
     @free_volume = volume
   end
