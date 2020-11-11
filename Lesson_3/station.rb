@@ -2,17 +2,25 @@
 
 require './company_name'
 require './instance_counter'
-require './validate'
+require './validation'
+require './accessors'
 
 class Station
   include InstanceCounter
-  include Validate
+  include Validation
+  extend Accessors
   # extend InstanceCounter::ClassMethods
 
-  STATION = /[a-zа-я]{2,}|\d/i.freeze
+  attr_accessor_with_history :attr_method
+  strong_attr_accessor(:string, String)
+
+  STATION = /[a-zа-яA-ZА-Я]{2,}|\d/.freeze
 
   attr_accessor :trains
   attr_reader :name
+  validate :name, :presence
+  validate :name, :format, STATION
+  validate :name, :type, String
 
   @@stations = []
 
@@ -38,11 +46,5 @@ class Station
 
   def train_block(&block)
     @trains.each(&block) if block_given?
-  end
-
-  private
-
-  def validate!
-    raise 'Станция не соответствует требованиям' if name !~ STATION
   end
 end

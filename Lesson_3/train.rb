@@ -2,15 +2,15 @@
 
 require './company_name'
 require './instance_counter'
-require './validate'
+require './validation'
 
 class Train
   include CompanyName
   include InstanceCounter
-  include Validate
+  include Validation
   # extend InstanceCounter::ClassMethods
 
-  TRAIN_NUMBER = /\w{3}-\w{2}|\w{5}/i.freeze
+  TRAIN_NUMBER = /\w{3}-\w{2}|\w{5}/.freeze
 
   @@trains = {}
 
@@ -24,6 +24,10 @@ class Train
 
   attr_accessor :speed, :route, :station, :wagons
   attr_reader :number
+
+  validate :number, :presence
+  validate :number, :format, TRAIN_NUMBER
+  validate :number, :type, String
 
   def initialize(number)
     @number = number
@@ -93,9 +97,5 @@ class Train
     raise 'Это конечная станция в маршруте' if @route.stations.size - 1 < @index_station + 1
 
     true
-  end
-
-  def validate!
-    raise 'Номер поезда не соответствует формату' if number !~ TRAIN_NUMBER
   end
 end

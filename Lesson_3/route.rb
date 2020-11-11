@@ -2,14 +2,25 @@
 
 require './company_name'
 require './instance_counter'
-require './validate'
+require './validation'
 
 class Route
   include InstanceCounter
-  include Validate
+  include Validation
   # extend InstanceCounter::ClassMethods
 
+  STATION = /[a-zа-яA-ZА-Я]{2,}|\d/.freeze
+
   attr_accessor :stations
+  attr_reader :start_station, :end_station
+
+  validate :start_station, :presence
+  validate :start_station, :format, STATION
+  validate :start_station, :type, String
+  validate :end_station, :presence
+  validate :end_station, :format, STATION
+  validate :end_station, :type, String
+  validate :stations, :type, Array
 
   @@routes = []
 
@@ -18,6 +29,8 @@ class Route
   end
 
   def initialize(start_station, end_station)
+    @start_station = start_station
+    @end_station = end_station
     @stations = [start_station, end_station]
     validate!
     @@routes << self
@@ -30,11 +43,5 @@ class Route
 
   def del_intermediate_station(station)
     @stations.delete(station)
-  end
-
-  private
-
-  def validate!
-    raise 'Количество станций в маршруте не может быть меньше, чем 2' if stations.count < 2
   end
 end

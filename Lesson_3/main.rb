@@ -9,6 +9,9 @@ require './wagon'
 require './cargo_wagon'
 require './passenger_wagon'
 require './company_name'
+require './validation'
+require './accessors'
+require './instance_counter'
 
 def find_train(index)
   train_keys = Train.all.keys
